@@ -888,4 +888,15 @@ export function handleWithdraw(event: Withdraw): void {
 
 // event TokensCollected(address indexed token, uint256 amountToCollect);
 // handler: handleTokensCollected
-export function handleTokensCollected(event: TokensCollected): void {}
+export function handleTokensCollected(event: TokensCollected): void {
+  let molochId = event.address.toHexString();
+  let tokenId = molochId.concat("-token-").concat(event.params.token.toHex());
+
+  log.info("^^^^ COLLECT, moloch: {}, token: {}, amount: {}", [
+    molochId,
+    tokenId,
+    event.params.amountToCollect.toString()
+  ]);
+
+  addToBalance(molochId, GUILD, tokenId, event.params.amountToCollect);
+}
