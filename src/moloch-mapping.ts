@@ -73,10 +73,6 @@ function subtractFromBalance(
   let tokenBalanceId = token.concat("-member-").concat(member.toHex());
   let balance: TokenBalance | null = TokenBalance.load(tokenBalanceId);
 
-  // TODO: migth want to load or create here - why not?
-
-  log.info("*********************** tokenBalanceId: {}", [tokenBalanceId]);
-
   balance.tokenBalance = balance.tokenBalance.minus(amount);
 
   balance.save();
@@ -90,7 +86,6 @@ function internalTransfer(
   token: string,
   amount: BigInt
 ): void {
-  log.info("Value = {internalTransfer}, other = {}", [""]);
   subtractFromBalance(molochId, from, token, amount);
   addToBalance(molochId, to, token, amount);
 }
@@ -104,10 +99,6 @@ export function createMemberTokenBalance(
   let memberId = molochId.concat("-member-").concat(member.toHex());
   let memberTokenBalanceId = token.concat("-member-").concat(member.toHex());
   let memberTokenBalance = new TokenBalance(memberTokenBalanceId);
-
-  log.info("++++++++++ creating member token balance: {}", [
-    memberTokenBalanceId
-  ]);
 
   memberTokenBalance.moloch = molochId;
   memberTokenBalance.token = token;
@@ -698,16 +689,9 @@ export function handleProcessGuildKickProposal(
     .concat(event.params.proposalId.toString());
   let proposal = Proposal.load(processProposalId);
 
-  // TODO: WHY WAS IT DOING THIS?
-  // let tokenId = molochId
-  //   .concat("-token-")
-  //   .concat(proposal.tributeToken.toHex());
-  // let token = Token.load(tokenId);
-
   //PROPOSAL PASSED
   //NOTE: invariant no loot no shares,
 
-  log.info("############# KICKING - MADE IT PAST PROP LOAD", []);
   if (event.params.didPass) {
     proposal.didPass = true;
     //Kick member
@@ -721,8 +705,9 @@ export function handleProcessGuildKickProposal(
       member.kicked = true;
       member.shares = BigInt.fromI32(0);
       member.loot = member.loot.plus(newLoot);
-      moloch.totalLoot.plus(newLoot);
-      moloch.totalShares.minus(newLoot);
+      moloch.totalLoot = moloch.totalLoot.plus(newLoot);
+      moloch.totalShares = moloch.totalShares.minus(newLoot);
+
       member.save();
     }
     //PROPOSAL FAILED
