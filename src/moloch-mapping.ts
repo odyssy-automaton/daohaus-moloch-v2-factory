@@ -321,10 +321,7 @@ export function handleSubmitProposal(event: SubmitProposal): void {
   proposal.guildkick = flags[5];
   proposal.newMember = newMember;
   proposal.trade = trade;
-  // proposal.details = event.params.details.replace(/[^\x20-\x7E]+/g, "");
-  // proposal.details = String.UTF8.encode(event.params.details);
 
-  // log.info("$$$$$$$$ proposal details, {}", [event.params.details.toString()]);
   if (event.params.details.toString().startsWith("{")) {
     proposal.details = event.params.details;
   } else {
