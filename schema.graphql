@@ -140,7 +140,8 @@ type Proposal @entity {
   guildkick: Boolean! #flags[5]
   newMember: Boolean! #no flag yet
   trade: Boolean! #not flag yet
-  details: String!
+  details: String
+
   maxTotalSharesAndLootAtYesVote: BigInt!
   votes: [Vote!] @derivedFrom(field: "proposal")
   yesShares: BigInt!

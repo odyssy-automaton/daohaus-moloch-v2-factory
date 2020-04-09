@@ -1305,13 +1305,21 @@ export class Proposal extends Entity {
     this.set("trade", Value.fromBoolean(value));
   }
 
-  get details(): string {
+  get details(): string | null {
     let value = this.get("details");
-    return value.toString();
+    if (value === null) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set details(value: string) {
-    this.set("details", Value.fromString(value));
+  set details(value: string | null) {
+    if (value === null) {
+      this.unset("details");
+    } else {
+      this.set("details", Value.fromString(value as string));
+    }
   }
 
   get maxTotalSharesAndLootAtYesVote(): BigInt {
