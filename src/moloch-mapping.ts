@@ -545,6 +545,26 @@ export function handleProcessProposal(event: ProcessProposal): void {
     proposal.didPass = false;
     // return all tokens to the applicant
 
+    // need to create a member enitity to support withdraws
+    if (isNewMember) {
+      let newMember = new Member(applicantId);
+
+      newMember.moloch = molochId;
+      newMember.createdAt = event.block.timestamp.toString();
+      newMember.molochAddress = event.address;
+      newMember.memberAddress = proposal.applicant;
+      newMember.delegateKey = proposal.applicant;
+      newMember.shares = BigInt.fromI32(0);
+      newMember.loot = BigInt.fromI32(0);
+      newMember.exists = false;
+      newMember.tokenTribute = BigInt.fromI32(0);
+      newMember.didRagequit = false;
+      newMember.proposedToKick = false;
+      newMember.kicked = false;
+
+      newMember.save();
+    }
+
     internalTransfer(
       molochId,
       ESCROW,
